@@ -1,0 +1,9 @@
+#global ignore list
+*.env
+*.lnk
+.DS_Store
+._.DS_Store
+
+#project specific ignore list
+*.tfvar
+*.tfvars
