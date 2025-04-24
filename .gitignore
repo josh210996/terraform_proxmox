@@ -7,3 +7,8 @@
 #project specific ignore list
 *.tfvar
 *.tfvars
+*.lock.info
+*.tfstate
+*.tfstate.backup
+*.lock.hcl
+

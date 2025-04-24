@@ -15,10 +15,18 @@ resource "proxmox_virtual_environment_vm" "ubuntu_clone" {
     enabled = true
   }
 
-  memory {
-    dedicated = 1024
-  }
+#  memory {
+#    dedicated = 1024
+#  }
 
+  disk {
+    datastore_id = "NVME1_Thin"
+#    file_id      = proxmox_virtual_environment_download_file.ubuntu_cloud_image.id
+    interface    = "virtio0"
+    iothread     = true
+    discard      = "on"
+    size         = 100
+  }
   initialization {
     dns {
       servers = ["192.168.178.11"]
