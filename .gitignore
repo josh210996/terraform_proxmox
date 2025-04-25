@@ -11,5 +11,6 @@
 *.tfstate
 *.tfstate.backup
 *.lock.hcl
+.terraform.lock.hcl
 /.terraform/
 /.git
