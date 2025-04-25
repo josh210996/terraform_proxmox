@@ -1,5 +1,5 @@
 resource "proxmox_virtual_environment_vm" "ubuntu_clone" {
-  name      = "ubuntu-clone"
+  name      = "ubuntu-clone2"
   node_name = "proxmox"
 
   clone {
