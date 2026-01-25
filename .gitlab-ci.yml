@@ -1,0 +1,67 @@
+include:
+  - component: gitlab.com/components/opentofu/job-templates@0.27.0
+    inputs:
+      version: 0.27.0
+      opentofu_version: 1.8.2
+      root_dir: terraform/
+      state_name: $CI_COMMIT_BRANCH
+
+variables:
+
+  ACTION:
+    value: 'DEPLOY'
+    description: 'Expected action'
+    options:
+      - 'DEPLOY'
+      - 'DESTROY'
+
+  TF_LOG:
+    value: 'ERROR'
+    description: 'Level of terraform log verbosity'
+    options:
+      - 'ERROR'
+      - 'WARN'
+      - 'INFO'
+      - 'DEBUG'
+      - 'TRACE'
+
+  CI_DEBUG_TRACE: "false"
+  TF_VAR_client_id: $AZURE_CLIENT_ID
+  TF_VAR_tenant_id: $AZURE_TENANT_ID
+  TF_VAR_subscription_id: $AZURE_SUBSCRIPTION_ID
+
+stages: [validate, test, build, deploy, cleanup]
+
+validate:
+  extends: [.opentofu:validate]
+
+graph:
+  extends: [.opentofu:graph]
+
+plan:
+  extends: [.opentofu:plan]
+  id_tokens:
+    TF_VAR_oidc_token:
+      aud: https://gitlab.com
+  variables:
+    destroy: $ACTION == 'DESTROY'
+
+apply:
+  extends: [.opentofu:apply]
+  id_tokens:
+    TF_VAR_oidc_token:
+      aud: https://gitlab.com
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $ACTION == 'DEPLOY'
+    - if: $CI_COMMIT_BRANCH == "dev" &&  $ACTION == 'DEPLOY'
+      when: manual
+
+destroy:
+  extends: [.opentofu:destroy]
+  id_tokens:
+    TF_VAR_oidc_token:
+      aud: https://gitlab.com
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $ACTION == 'DESTROY'
+    - if: $CI_COMMIT_BRANCH == "dev" && $ACTION == 'DESTROY'
+      when: manual

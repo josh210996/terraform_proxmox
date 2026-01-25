@@ -14,3 +14,8 @@ provider "proxmox" {
     agent = true
   }
 }
+
+terraform {
+  backend "http" {
+  }
+}

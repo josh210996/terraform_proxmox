@@ -29,7 +29,7 @@ resource "proxmox_virtual_environment_vm" "ubuntu_clone" {
   }
   initialization {
     dns {
-      servers = ["192.168.178.11"]
+      servers = [""]
     }
     ip_config {
       ipv4 {
